@@ -1,1 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>脱AIくん | AI文章を人間らしく自然に変換</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-amber-50 text-gray-800 min-h-screen font-sans p-4">
+  <div class="max-w-md mx-auto bg-white rounded-2xl shadow-xl border-2 border-orange-200 p-6 my-6">
+    <div class="flex items-center gap-3 mb-6 border-b pb-4 border-orange-100">
+      <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow">脱</div>
+      <div>
+        <h1 class="text-2xl font-extrabold text-orange-600">脱AIくん</h1>
+        <p class="text-xs text-gray-500">AIっぽい文章を自然な人間文体に一瞬で変換！</p>
+      </div>
+    </div>
 
+    <div class="mb-4">
+      <label class="block text-sm font-bold text-gray-700 mb-2">変換したい文章を入力</label>
+      <textarea id="inputText" rows="5" class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:outline-none transition" placeholder="ここにAIが作った文章を貼り付けてください..."></textarea>
+    </div>
+
+    <div class="mb-6">
+      <label class="block text-sm font-bold text-gray-700 mb-2">文体スタイル</label>
+      <div class="grid grid-cols-3 gap-2">
+        <button onclick="setStyle('normal')" id="btn-normal" class="style-btn py-2 text-xs font-bold rounded-lg border-2 border-orange-500 bg-orange-500 text-white">ふつう</button>
+        <button onclick="setStyle('casual')" id="btn-casual" class="style-btn py-2 text-xs font-bold rounded-lg border-2 border-gray-200 bg-gray-50 text-gray-700">カジュアル</button>
+        <button onclick="setStyle('business')" id="btn-business" class="style-btn py-2 text-xs font-bold rounded-lg border-2 border-gray-200 bg-gray-50 text-gray-700">ビジネス</button>
+      </div>
+    </div>
+
+    <button onclick="humanize()" class="w-full bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-extrabold py-3.5 rounded-xl shadow-md transition transform text-lg mb-4">
+      ✨ 人間の文章に変換する
+    </button>
+
+    <div id="resultBox" class="hidden border-2 border-green-200 bg-green-50 rounded-xl p-4 mt-4">
+      <div class="flex justify-between items-center mb-2">
+        <span class="text-xs font-bold text-green-700">変換結果</span>
+        <button onclick="copyResult()" class="text-xs bg-white text-green-700 border border-green-300 px-2 py-1 rounded-md font-bold">コピー</button>
+      </div>
+      <p id="outputText" class="text-sm text-gray-800 whitespace-pre-wrap font-medium"></p>
+    </div>
+  </div>
+
+  <script>
+    let currentStyle = 'normal';
+
+    function setStyle(style) {
+      currentStyle = style;
+      document.querySelectorAll('.style-btn').forEach(btn => {
+        btn.className = 'style-btn py-2 text-xs font-bold rounded-lg border-2 border-gray-200 bg-gray-50 text-gray-700';
+      });
+      const activeBtn = document.getElementById('btn-' + style);
+      activeBtn.className = 'style-btn py-2 text-xs font-bold rounded-lg border-2 border-orange-500 bg-orange-500 text-white';
+    }
+
+    function humanize() {
+      const input = document.getElementById('inputText').value;
+      if (!input.trim()) return alert('文章を入力してください！');
+
+      let text = input;
+
+      const replacements = [
+        [ /と言えるでしょう/g, "ですね" ],
+        [ /と考えられます/g, "だと思います" ],
+        [ /重要なポイントは/g, "大事なのは" ],
+        [ /具体的には/g, "たとえば" ],
+        [ /このように/g, "こんな感じで" ],
+        [ /〜することが可能です/g, "〜できます" ],
+        [ /〜を実施する/g, "〜をする" ],
+        [ /したがって/g, "だから" ]
+      ];
+
+      replacements.forEach(([from, to]) => {
+        text = text.replace(from, to);
+      });
+
+      if (currentStyle === 'casual') {
+        text = text.replace(/です。/g, "だよ！ ").replace(/ます。/g, "ね！ ");
+      } else if (currentStyle === 'business') {
+        text = text.replace(/ですね/g, "と考えます").replace(/だと思います/g, "と認識しております");
+      }
+
+      document.getElementById('outputText').innerText = text;
+      document.getElementById('resultBox').classList.remove('hidden');
+    }
+
+    function copyResult() {
+      const text = document.getElementById('outputText').innerText;
+      navigator.clipboard.writeText(text);
+      alert('コピーしました！');
+    }
+  </script>
+</body>
+</html>
