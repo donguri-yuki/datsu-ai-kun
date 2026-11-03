@@ -1,96 +1,195 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>脱AIくん | AI文章を人間らしく自然に変換</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>脱AIくん | AI文章を自然な人間文体に一瞬で書き換え</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Zen Maru Gothic', 'M PLUS Rounded 1c', sans-serif;
+            background-color: #fcf8f2;
+            color: #4a3b32;
+        }
+        .bg-cream { background-color: #fbf7ee; }
+        .bg-cream-card { background-color: #fffdf7; }
+        .border-brand { border-color: #e6d7c3; }
+        .text-brand-dark { color: #3a2e2b; }
+        .text-brand-orange { color: #d9532f; }
+        .bg-brand-orange { background-color: #d9532f; }
+        .bg-brand-orange-light { background-color: #f7e8e1; }
+        .btn-primary {
+            background: linear-gradient(135deg, #e05a36 0%, #c8431f 100%);
+            box-shadow: 0 4px 12px rgba(217, 83, 47, 0.25);
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #c8431f 0%, #b03515 100%);
+        }
+    </style>
 </head>
-<body class="bg-amber-50 text-gray-800 min-h-screen font-sans p-4">
-  <div class="max-w-md mx-auto bg-white rounded-2xl shadow-xl border-2 border-orange-200 p-6 my-6">
-    <div class="flex items-center gap-3 mb-6 border-b pb-4 border-orange-100">
-      <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow">脱</div>
-      <div>
-        <h1 class="text-2xl font-extrabold text-orange-600">脱AIくん</h1>
-        <p class="text-xs text-gray-500">AIっぽい文章を自然な人間文体に一瞬で変換！</p>
-      </div>
-    </div>
+<body class="min-h-screen flex flex-col bg-cream text-brand-dark">
 
-    <div class="mb-4">
-      <label class="block text-sm font-bold text-gray-700 mb-2">変換したい文章を入力</label>
-      <textarea id="inputText" rows="5" class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:outline-none transition" placeholder="ここにAIが作った文章を貼り付けてください..."></textarea>
-    </div>
+    <!-- Header -->
+    <header class="border-b border-brand bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl">🤖</span>
+                <span class="font-black text-xl tracking-tight text-brand-dark">脱AIくん</span>
+            </div>
+            <nav class="hidden md:flex items-center space-x-6 text-sm font-bold text-gray-600">
+                <a href="#features" class="hover:text-brand-orange transition">ツール</a>
+                <a href="#pricing" class="hover:text-brand-orange transition">言葉の変換ルール</a>
+                <a href="#faq" class="hover:text-brand-orange transition">よくある質問</a>
+            </nav>
+            <a href="#editor" class="bg-brand-orange text-white text-xs font-bold px-4 py-2 rounded-full shadow hover:opacity-90 transition">無料で使う</a>
+        </div>
+    </header>
 
-    <div class="mb-6">
-      <label class="block text-sm font-bold text-gray-700 mb-2">文体スタイル</label>
-      <div class="grid grid-cols-3 gap-2">
-        <button onclick="setStyle('normal')" id="btn-normal" class="style-btn py-2 text-xs font-bold rounded-lg border-2 border-orange-500 bg-orange-500 text-white">ふつう</button>
-        <button onclick="setStyle('casual')" id="btn-casual" class="style-btn py-2 text-xs font-bold rounded-lg border-2 border-gray-200 bg-gray-50 text-gray-700">カジュアル</button>
-        <button onclick="setStyle('business')" id="btn-business" class="style-btn py-2 text-xs font-bold rounded-lg border-2 border-gray-200 bg-gray-50 text-gray-700">ビジネス</button>
-      </div>
-    </div>
+    <!-- Main Hero & Editor Section -->
+    <main class="flex-1 max-w-4xl mx-auto px-4 py-8 w-full space-y-10">
+        
+        <!-- Hero Title -->
+        <div class="text-center space-y-3">
+            <div class="inline-block bg-brand-orange-light text-brand-orange font-extrabold text-xs px-3 py-1 rounded-full">
+                AIっぽさ、はずします。
+            </div>
+            <h1 class="text-3xl md:text-5xl font-black text-brand-dark leading-tight">
+                その文章、<br class="md:hidden">AIが書いたって<br><span class="text-brand-orange">バレてない？</span>
+            </h1>
+            <p class="text-sm md:text-base text-gray-600 font-medium max-w-xl mx-auto">
+                「～することが重要です」「いかがでしたか？」――そんな「いかにもAI」な文章を、脱AIくんが自然で読みやすい日本語に即時変換します。
+            </p>
+        </div>
 
-    <button onclick="humanize()" class="w-full bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-extrabold py-3.5 rounded-xl shadow-md transition transform text-lg mb-4">
-      ✨ 人間の文章に変換する
-    </button>
+        <!-- Editor Box -->
+        <div id="editor" class="bg-cream-card border-2 border-brand rounded-3xl p-5 md:p-8 shadow-xl space-y-6">
+            
+            <!-- Input Textarea -->
+            <div class="space-y-2">
+                <label for="inputText" class="block font-bold text-sm text-brand-dark flex items-center justify-between">
+                    <span>変換したい文章を入力</span>
+                    <span class="text-xs text-gray-400 font-normal">API費用不要・一瞬で処理</span>
+                </label>
+                <textarea id="inputText" rows="6" 
+                    class="w-full p-4 border-2 border-brand rounded-2xl focus:outline-none focus:border-brand-orange bg-white text-base resize-none"
+                    placeholder="ここにChatGPTなどで生成した文章を貼り付けてください..."></textarea>
+            </div>
 
-    <div id="resultBox" class="hidden border-2 border-green-200 bg-green-50 rounded-xl p-4 mt-4">
-      <div class="flex justify-between items-center mb-2">
-        <span class="text-xs font-bold text-green-700">変換結果</span>
-        <button onclick="copyResult()" class="text-xs bg-white text-green-700 border border-green-300 px-2 py-1 rounded-md font-bold">コピー</button>
-      </div>
-      <p id="outputText" class="text-sm text-gray-800 whitespace-pre-wrap font-medium"></p>
-    </div>
-  </div>
+            <!-- Style Selector Buttons -->
+            <div class="space-y-2">
+                <span class="block font-bold text-sm text-brand-dark">文体スタイル</span>
+                <div class="grid grid-cols-3 gap-3">
+                    <button type="button" onclick="setStyle('normal')" id="btn-normal" 
+                        class="style-btn py-2.5 px-4 rounded-xl border-2 border-brand font-bold text-sm bg-brand-orange text-white border-brand-orange transition">
+                        ふつう
+                    </button>
+                    <button type="button" onclick="setStyle('casual')" id="btn-casual" 
+                        class="style-btn py-2.5 px-4 rounded-xl border-2 border-brand font-bold text-sm bg-white text-gray-700 hover:bg-gray-50 transition">
+                        カジュアル
+                    </button>
+                    <button type="button" onclick="setStyle('business')" id="btn-business" 
+                        class="style-btn py-2.5 px-4 rounded-xl border-2 border-brand font-bold text-sm bg-white text-gray-700 hover:bg-gray-50 transition">
+                        ビジネス
+                    </button>
+                </div>
+            </div>
 
-  <script>
-    let currentStyle = 'normal';
+            <!-- Convert Button -->
+            <button id="convertBtn" onclick="convertText()" 
+                class="w-full btn-primary text-white font-black text-lg py-4 rounded-2xl transition transform active:scale-95 flex items-center justify-center space-x-2">
+                <span>✨ 人間の文章に変換する</span>
+            </button>
 
-    function setStyle(style) {
-      currentStyle = style;
-      document.querySelectorAll('.style-btn').forEach(btn => {
-        btn.className = 'style-btn py-2 text-xs font-bold rounded-lg border-2 border-gray-200 bg-gray-50 text-gray-700';
-      });
-      const activeBtn = document.getElementById('btn-' + style);
-      activeBtn.className = 'style-btn py-2 text-xs font-bold rounded-lg border-2 border-orange-500 bg-orange-500 text-white';
-    }
+            <!-- Output Box -->
+            <div class="space-y-2 pt-2">
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-sm text-brand-dark">変換結果</span>
+                    <button onclick="copyOutput()" class="text-xs bg-white border border-brand text-gray-600 px-3 py-1 rounded-lg font-bold hover:bg-gray-100 transition">
+                        コピー
+                    </button>
+                </div>
+                <div id="outputText" class="w-full p-4 border-2 border-green-200 bg-green-50/50 rounded-2xl text-base min-h-[120px] whitespace-pre-wrap font-medium text-gray-800">
+                    ここに変換後の文章が表示されます
+                </div>
+            </div>
 
-    function humanize() {
-      const input = document.getElementById('inputText').value;
-      if (!input.trim()) return alert('文章を入力してください！');
+        </div>
 
-      let text = input;
+        <!-- Features Badges -->
+        <div class="grid grid-cols-3 gap-4 text-center">
+            <div class="bg-white p-4 rounded-2xl border border-brand">
+                <div class="font-black text-brand-orange text-lg">0円</div>
+                <div class="text-xs text-gray-500 font-bold">完全無料で無制限</div>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-brand">
+                <div class="font-black text-brand-orange text-lg">約0.1秒</div>
+                <div class="text-xs text-gray-500 font-bold">爆速ローカル変換</div>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-brand">
+                <div class="font-black text-brand-orange text-lg">3種類</div>
+                <div class="text-xs text-gray-500 font-bold">選べる文体モード</div>
+            </div>
+        </div>
 
-      const replacements = [
-        [ /と言えるでしょう/g, "ですね" ],
-        [ /と考えられます/g, "だと思います" ],
-        [ /重要なポイントは/g, "大事なのは" ],
-        [ /具体的には/g, "たとえば" ],
-        [ /このように/g, "こんな感じで" ],
-        [ /〜することが可能です/g, "〜できます" ],
-        [ /〜を実施する/g, "〜をする" ],
-        [ /したがって/g, "だから" ]
-      ];
+    </main>
 
-      replacements.forEach(([from, to]) => {
-        text = text.replace(from, to);
-      });
+    <!-- Footer -->
+    <footer class="border-t border-brand bg-white/50 py-6 text-center text-xs text-gray-400 font-bold">
+        © 脱AIくん - AI文章を人間味のある自然な日本語へ
+    </footer>
 
-      if (currentStyle === 'casual') {
-        text = text.replace(/です。/g, "だよ！ ").replace(/ます。/g, "ね！ ");
-      } else if (currentStyle === 'business') {
-        text = text.replace(/ですね/g, "と考えます").replace(/だと思います/g, "と認識しております");
-      }
+    <!-- Local Rule-based Script -->
+    <script>
+        let currentStyle = 'normal';
 
-      document.getElementById('outputText').innerText = text;
-      document.getElementById('resultBox').classList.remove('hidden');
-    }
+        function setStyle(style) {
+            currentStyle = style;
+            document.querySelectorAll('.style-btn').forEach(btn => {
+                btn.className = 'style-btn py-2.5 px-4 rounded-xl border-2 border-brand font-bold text-sm bg-white text-gray-700 hover:bg-gray-50 transition';
+            });
+            const activeBtn = document.getElementById(`btn-${style}`);
+            activeBtn.className = 'style-btn py-2.5 px-4 rounded-xl border-2 border-brand font-bold text-sm bg-brand-orange text-white border-brand-orange transition';
+        }
 
-    function copyResult() {
-      const text = document.getElementById('outputText').innerText;
-      navigator.clipboard.writeText(text);
-      alert('コピーしました！');
-    }
-  </script>
+        function convertText() {
+            const input = document.getElementById('inputText').value;
+            if (!input.trim()) {
+                alert('変換したい文章を入力してください');
+                return;
+            }
+
+            let text = input;
+
+            // 共通ルール（AI臭さを除去）
+            text = text.replace(/いかがでしたか[？?]?/g, "");
+            text = text.replace(/～することが重要です/g, "～するのが大切です");
+            text = text.replace(/することが重要です/g, "することが大切です");
+            text = text.replace(/重要なポイントは/g, "ポイントは");
+            text = text.replace(/一概には言えませんが/g, "場合によりますが");
+            text = text.replace(/結論から言うと/g, "結論として");
+            text = text.replace(/是非参考にしてみてください[。！!]?/g, "参考にしてみてください。");
+
+            // スタイルごとの調整
+            if (currentStyle === 'casual') {
+                text = text.replace(/です。/g, "だよ。");
+                text = text.replace(/ます。/g, "ね。");
+                text = text.replace(/でしょうか[？?]/g, "かな？");
+            } else if (currentStyle === 'business') {
+                text = text.replace(/大切です/g, "極めて重要でございます");
+                text = text.replace(/ポイントは/g, "留意すべき点は");
+            }
+
+            document.getElementById('outputText').innerText = text;
+        }
+
+        function copyOutput() {
+            const text = document.getElementById('outputText').innerText;
+            if (text && text !== 'ここに変換後の文章が表示されます') {
+                navigator.clipboard.writeText(text);
+                alert('コピーしました！');
+            }
+        }
+    </script>
 </body>
 </html>
