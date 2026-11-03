@@ -37,11 +37,6 @@
                 <span class="text-2xl">🤖</span>
                 <span class="font-black text-xl tracking-tight text-brand-dark">脱AIくん</span>
             </div>
-            <nav class="hidden md:flex items-center space-x-6 text-sm font-bold text-gray-600">
-                <a href="#features" class="hover:text-brand-orange transition">ツール</a>
-                <a href="#pricing" class="hover:text-brand-orange transition">言葉の変換ルール</a>
-                <a href="#faq" class="hover:text-brand-orange transition">よくある質問</a>
-            </nav>
             <a href="#editor" class="bg-brand-orange text-white text-xs font-bold px-4 py-2 rounded-full shadow hover:opacity-90 transition">無料で使う</a>
         </div>
     </header>
@@ -49,31 +44,29 @@
     <!-- Main Hero & Editor Section -->
     <main class="flex-1 max-w-4xl mx-auto px-4 py-8 w-full space-y-10">
         
-        <!-- Hero Title -->
         <div class="text-center space-y-3">
             <div class="inline-block bg-brand-orange-light text-brand-orange font-extrabold text-xs px-3 py-1 rounded-full">
-                AIっぽさ、はずします。
+                AIっぽさ、完璧にはずします。
             </div>
             <h1 class="text-3xl md:text-5xl font-black text-brand-dark leading-tight">
                 その文章、<br class="md:hidden">AIが書いたって<br><span class="text-brand-orange">バレてない？</span>
             </h1>
             <p class="text-sm md:text-base text-gray-600 font-medium max-w-xl mx-auto">
-                「～することが重要です」「いかがでしたか？」――そんな「いかにもAI」な文章を、脱AIくんが自然で読みやすい日本語に即時変換します。
+                最新AIエンジン搭載！ChatGPT等の「いかにもAI」な文章を、人間が書いたような自然で説得力のある文章に高精度書き換えします。
             </p>
         </div>
 
         <!-- Editor Box -->
         <div id="editor" class="bg-cream-card border-2 border-brand rounded-3xl p-5 md:p-8 shadow-xl space-y-6">
             
-            <!-- Input Textarea -->
             <div class="space-y-2">
                 <label for="inputText" class="block font-bold text-sm text-brand-dark flex items-center justify-between">
                     <span>変換したい文章を入力</span>
-                    <span class="text-xs text-gray-400 font-normal">API費用不要・一瞬で処理</span>
+                    <span class="text-xs text-brand-orange font-bold">✨ AI高精度変換モード</span>
                 </label>
                 <textarea id="inputText" rows="6" 
                     class="w-full p-4 border-2 border-brand rounded-2xl focus:outline-none focus:border-brand-orange bg-white text-base resize-none"
-                    placeholder="ここにChatGPTなどで生成した文章を貼り付けてください..."></textarea>
+                    placeholder="ここにAIが作った文章を貼り付けてください..."></textarea>
             </div>
 
             <!-- Style Selector Buttons -->
@@ -96,9 +89,9 @@
             </div>
 
             <!-- Convert Button -->
-            <button id="convertBtn" onclick="convertText()" 
+            <button id="convertBtn" onclick="convertWithAI()" 
                 class="w-full btn-primary text-white font-black text-lg py-4 rounded-2xl transition transform active:scale-95 flex items-center justify-center space-x-2">
-                <span>✨ 人間の文章に変換する</span>
+                <span id="btnText">✨ 人間の文章に変換する（AI実行）</span>
             </button>
 
             <!-- Output Box -->
@@ -116,31 +109,15 @@
 
         </div>
 
-        <!-- Features Badges -->
-        <div class="grid grid-cols-3 gap-4 text-center">
-            <div class="bg-white p-4 rounded-2xl border border-brand">
-                <div class="font-black text-brand-orange text-lg">0円</div>
-                <div class="text-xs text-gray-500 font-bold">完全無料で無制限</div>
-            </div>
-            <div class="bg-white p-4 rounded-2xl border border-brand">
-                <div class="font-black text-brand-orange text-lg">約0.1秒</div>
-                <div class="text-xs text-gray-500 font-bold">爆速ローカル変換</div>
-            </div>
-            <div class="bg-white p-4 rounded-2xl border border-brand">
-                <div class="font-black text-brand-orange text-lg">3種類</div>
-                <div class="text-xs text-gray-500 font-bold">選べる文体モード</div>
-            </div>
-        </div>
-
     </main>
 
-    <!-- Footer -->
     <footer class="border-t border-brand bg-white/50 py-6 text-center text-xs text-gray-400 font-bold">
         © 脱AIくん - AI文章を人間味のある自然な日本語へ
     </footer>
 
-    <!-- Local Rule-based Script -->
+    <!-- Gemini API Integration Script -->
     <script>
+        const GEMINI_API_KEY = "AQ.Ab8RN6LTMaoh-35k3J2XQ8HYSN7QFKf-ELBD3GdsHuGXRND5CA";
         let currentStyle = 'normal';
 
         function setStyle(style) {
@@ -152,35 +129,59 @@
             activeBtn.className = 'style-btn py-2.5 px-4 rounded-xl border-2 border-brand font-bold text-sm bg-brand-orange text-white border-brand-orange transition';
         }
 
-        function convertText() {
+        async function convertWithAI() {
             const input = document.getElementById('inputText').value;
             if (!input.trim()) {
                 alert('変換したい文章を入力してください');
                 return;
             }
 
-            let text = input;
+            const btnText = document.getElementById('btnText');
+            const outputText = document.getElementById('outputText');
+            
+            btnText.innerText = "⏳ AIが自然な文章に書き換え中...";
+            outputText.innerText = "思考中...";
 
-            // 共通ルール（AI臭さを除去）
-            text = text.replace(/いかがでしたか[？?]?/g, "");
-            text = text.replace(/～することが重要です/g, "～するのが大切です");
-            text = text.replace(/することが重要です/g, "することが大切です");
-            text = text.replace(/重要なポイントは/g, "ポイントは");
-            text = text.replace(/一概には言えませんが/g, "場合によりますが");
-            text = text.replace(/結論から言うと/g, "結論として");
-            text = text.replace(/是非参考にしてみてください[。！!]?/g, "参考にしてみてください。");
-
-            // スタイルごとの調整
+            let styleInstruction = "標準的で自然な人間の文章";
             if (currentStyle === 'casual') {
-                text = text.replace(/です。/g, "だよ。");
-                text = text.replace(/ます。/g, "ね。");
-                text = text.replace(/でしょうか[？?]/g, "かな？");
+                styleInstruction = "親しみやすく読みやすいカジュアルなブログ風の文体（〜だよ、〜ね 等）";
             } else if (currentStyle === 'business') {
-                text = text.replace(/大切です/g, "極めて重要でございます");
-                text = text.replace(/ポイントは/g, "留意すべき点は");
+                styleInstruction = "丁寧で信頼感のあるプロフェッショナルなビジネス文体";
             }
 
-            document.getElementById('outputText').innerText = text;
+            const prompt = `あなたは文章リライトのプロです。
+以下の「AIが書いた文章」を、AI特有の堅苦しさや定型句（「〜することが重要です」「いかがでしたか？」など）を排除し、人間が実際に書いたような自然で読みやすい文章に書き換えてください。
+
+【文体指定】: ${styleInstruction}
+
+【元の文章】:
+${input}
+
+【注意事項】:
+- 解説や挨拶などの余計なテキストは一切含めず、書き換えた後の文章のみを出力してください。`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    outputText.innerText = data.candidates[0].content.parts[0].text.trim();
+                } else {
+                    outputText.innerText = "変換に失敗しました。APIキーまたは入力内容を確認してください。";
+                }
+            } catch (error) {
+                console.error(error);
+                outputText.innerText = "通信エラーが発生しました。時間をおいて再度お試しください。";
+            } finally {
+                btnText.innerText = "✨ 人間の文章に変換する（AI実行）";
+            }
         }
 
         function copyOutput() {
